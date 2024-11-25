@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>zMed SQLCoder AI Playground</title>
+    <!-- Font Awesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- MDB -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/8.1.0/mdb.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/index.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <nav class="navbar navbar-light bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img
+            src="/static/images/sql-server.png"
+            class="me-2"
+            height="40"
+            alt="MDB Logo"
+            loading="lazy"
+          />
+          <small>zMed SQLCoder Playground</small>
+        </a>
+      </div>
+    </nav>
+    <div class="container-fluid">
+      <div id="app_alert" class="none" role="alert"></div>
+      <div class="row margin-top10px">
+        <div
+          class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 margin-top10px"
+        >
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">SQLCoder</h5>
+              <div class="row">
+                <div class="col-4">
+                  <div
+                    class="list-group list-group-light"
+                    id="list-tab"
+                    role="tablist"
+                  >
+                    <a
+                      class="list-group-item list-group-item-action active px-3 border-0"
+                      id="info_text_div-list"
+                      data-mdb-list-init
+                      href="#info_text_div"
+                      role="tab"
+                      aria-controls="info_text_div"
+                      >Info</a
+                    >
+                    <a
+                      class="list-group-item list-group-item-action px-3 border-0"
+                      id="instruction_text_div-list"
+                      data-mdb-list-init
+                      href="#instruction_text_div"
+                      role="tab"
+                      aria-controls="instruction_text_div"
+                      >Prompt (Instructions)</a
+                    >
+                    <a
+                      class="list-group-item list-group-item-action px-3 border-0"
+                      id="sql_metadata_text_div-list"
+                      data-mdb-list-init
+                      href="#sql_metadata_text_div"
+                      role="tab"
+                      aria-controls="sql_metadata_text_div"
+                      >Sql Metadata</a
+                    >
+                    <a
+                      class="list-group-item list-group-item-action px-3 border-0"
+                      id="chat_text_div-list"
+                      data-mdb-list-init
+                      href="#chat_text_div"
+                      role="tab"
+                      aria-controls="chat_text_div"
+                      >Chat</a
+                    >
+                  </div>
+                </div>
+                <div class="col-8">
+                  <div class="tab-content" id="nav-tabContent">
+                    <div
+                      class="tab-pane fade show active"
+                      id="info_text_div"
+                      role="tabpanel"
+                      aria-labelledby="info_text_div-list"
+                    >
+                      <div class="tab_content" id="info_text_div_content"></div>
+                    </div>
+                    <div
+                      class="tab-pane fade"
+                      id="instruction_text_div"
+                      role="tabpanel"
+                      aria-labelledby="instruction_text_div-list"
+                    >
+                      <div
+                        class="tab_content"
+                        id="instruction_text_div_content"
+                      >
+                        <div
+                          class="form-outline margin-top10px"
+                          data-mdb-input-init
+                        >
+                          <textarea
+                            class="form-control"
+                            id="prompt"
+                            rows="20"
+                          ></textarea>
+                          <label class="form-label" for="prompt">Prompt</label>
+                        </div>
+                        <button
+                          type="button"
+                          id="save_prompt_btn"
+                          class="btn btn-primary btn-block margin-top10px"
+                          data-mdb-ripple-init
+                        >
+                          Save
+                        </button>
+                        <center>
+                          <div
+                            id="save_prompt_loader"
+                            class="spinner-border text-primary margin-top10px float-right none"
+                            role="status"
+                          >
+                            <span class="visually-hidden">Loading...</span>
+                          </div>
+                        </center>
+                      </div>
+                    </div>
+                    <div
+                      class="tab-pane fade"
+                      id="sql_metadata_text_div"
+                      role="tabpanel"
+                      aria-labelledby="sql_metadata_text_div-list"
+                    >
+                      <div
+                        class="tab_content"
+                        id="sql_metadata_text_div_content"
+                      >
+                        <div
+                          class="form-outline margin-top10px"
+                          data-mdb-input-init
+                        >
+                          <textarea
+                            class="form-control"
+                            id="sql_metadata"
+                            rows="20"
+                          ></textarea>
+                          <label class="form-label" for="sql_metadata"
+                            >SQL Metadata</label
+                          >
+                        </div>
+                        <button
+                          type="button"
+                          id="save_metadata_btn"
+                          class="btn btn-primary btn-block margin-top10px"
+                          data-mdb-ripple-init
+                        >
+                          Save
+                        </button>
+                        <center>
+                          <div
+                            id="save_metadata_loader"
+                            class="spinner-border text-primary margin-top10px float-right none"
+                            role="status"
+                          >
+                            <span class="visually-hidden">Loading...</span>
+                          </div>
+                        </center>
+                      </div>
+                    </div>
+                    <div
+                      class="tab-pane fade"
+                      id="chat_text_div"
+                      role="tabpanel"
+                      aria-labelledby="chat_text_div-list"
+                    >
+                      <div class="tab_content" id="chat_text_div_content"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/8.1.0/mdb.umd.min.js"
+    ></script>
+    <script src="/static/script.js"></script>
+  </body>
+</html>

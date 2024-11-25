@@ -1,0 +1,14 @@
+.margin-top10px {
+  margin-top: 10px;
+}
+.float-right {
+  float: right;
+}
+.none {
+  display: none;
+}
+
+#app_alert {
+  position: absolute;
+  bottom: 20px;
+}
