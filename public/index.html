@@ -82,12 +82,12 @@
                     >
                     <a
                       class="list-group-item list-group-item-action px-3 border-0"
-                      id="chat_text_div-list"
+                      id="queryChat_text_div-list"
                       data-mdb-list-init
-                      href="#chat_text_div"
+                      href="#queryChat_text_div"
                       role="tab"
-                      aria-controls="chat_text_div"
-                      >Chat</a
+                      aria-controls="queryChat_text_div"
+                      >Get SQL Query</a
                     >
                   </div>
                 </div>
@@ -99,7 +99,92 @@
                       role="tabpanel"
                       aria-labelledby="info_text_div-list"
                     >
-                      <div class="tab_content" id="info_text_div_content"></div>
+                      <div class="tab_content" id="info_text_div_content">
+                        <div class="card">
+                          <div class="card-body">
+                            <h5 class="card-title">SQL DB Connection</h5>
+                            <div
+                              class="form-outline margin-top10px"
+                              data-mdb-input-init
+                            >
+                              <input
+                                type="text"
+                                id="host"
+                                class="form-control"
+                              />
+                              <label class="form-label" for="host">Host</label>
+                            </div>
+                            <div
+                              class="form-outline margin-top10px"
+                              data-mdb-input-init
+                            >
+                              <input
+                                type="number"
+                                id="port"
+                                class="form-control"
+                              />
+                              <label class="form-label" for="port">Port</label>
+                            </div>
+                            <div
+                              class="form-outline margin-top10px"
+                              data-mdb-input-init
+                            >
+                              <input
+                                type="text"
+                                id="user"
+                                class="form-control"
+                              />
+                              <label class="form-label" for="user">User</label>
+                            </div>
+                            <div
+                              class="form-outline margin-top10px"
+                              data-mdb-input-init
+                            >
+                              <input
+                                type="password"
+                                id="password"
+                                class="form-control"
+                              />
+                              <label class="form-label" for="password"
+                                >Password</label
+                              >
+                            </div>
+                            <div
+                              class="form-outline margin-top10px"
+                              data-mdb-input-init
+                            >
+                              <input
+                                type="text"
+                                id="database"
+                                class="form-control"
+                              />
+                              <label class="form-label" for="database"
+                                >Database</label
+                              >
+                            </div>
+                            <p class="margin-top10px">
+                              Status : <span id="con_status" class=""></span>
+                            </p>
+                            <button
+                              id="db_con_save_btn"
+                              type="button"
+                              class="btn btn-primary btn-block margin-top10px"
+                              data-mdb-ripple-init
+                            >
+                              Save
+                            </button>
+                            <center>
+                              <div
+                                id="db_con_save_loader"
+                                class="spinner-border text-primary margin-top10px none"
+                                role="status"
+                              >
+                                <span class="visually-hidden">Loading...</span>
+                              </div>
+                            </center>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                     <div
                       class="tab-pane fade"
@@ -185,11 +270,43 @@
                     </div>
                     <div
                       class="tab-pane fade"
-                      id="chat_text_div"
+                      id="queryChat_text_div"
                       role="tabpanel"
-                      aria-labelledby="chat_text_div-list"
+                      aria-labelledby="queryChat_text_div-list"
                     >
-                      <div class="tab_content" id="chat_text_div_content"></div>
+                      <div class="tab_content" id="queryChat_text_div_content">
+                        <div id="query_chat_content_area"></div>
+                        <div
+                          class="form-outline margin-top10px"
+                          data-mdb-input-init
+                        >
+                          <textarea
+                            class="form-control"
+                            id="question"
+                            rows="3"
+                          ></textarea>
+                          <label class="form-label" for="question"
+                            >Question</label
+                          >
+                        </div>
+                        <button
+                          type="button"
+                          id="get_query_btn"
+                          class="btn btn-primary btn-block margin-top10px"
+                          data-mdb-ripple-init
+                        >
+                          Get Query
+                        </button>
+                        <center>
+                          <div
+                            id="get_query_loader"
+                            class="spinner-border text-primary margin-top10px none"
+                            role="status"
+                          >
+                            <span class="visually-hidden">Loading...</span>
+                          </div>
+                        </center>
+                      </div>
                     </div>
                   </div>
                 </div>

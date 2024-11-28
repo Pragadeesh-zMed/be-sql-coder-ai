@@ -12,3 +12,32 @@
   position: absolute;
   bottom: 20px;
 }
+#query_chat_content_area {
+  height: 60vh;
+  overflow-y: scroll;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+.ques_div {
+  min-width: 50%;
+  max-width: 80%;
+  background: #e1ffed;
+  padding: 6px;
+  margin-top: 7px;
+  margin-bottom: 7px;
+  float: right;
+  border-radius: 10px;
+  margin-right: 10px;
+}
+
+.query_response_div {
+  min-width: 50%;
+  max-width: 80%;
+  background: #5fe996;
+  padding: 6px;
+  margin-top: 7px;
+  margin-bottom: 7px;
+  float: left;
+  border-radius: 10px;
+  margin-left: 10px;
+}
