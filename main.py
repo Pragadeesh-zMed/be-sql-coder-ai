@@ -59,6 +59,11 @@ def pong():
 @app.get("/get/all_info")
 async def getAllAvailableInfo():
     result={}
+    ai_server = gen_ai.zOllama('English','')
+    models = ai_server.client.list()
+    ollama_models = []
+    for model in models.models:
+        ollama_models.append(model.model)
     prompt_file=open("prompt.md","r")
     result['prompt'] = prompt_file.read()
     prompt_file.close()
@@ -75,6 +80,7 @@ async def getAllAvailableInfo():
     result["sql_db_connection_info"]['password'] = sqlManager.password
     result["sql_db_connection_info"]['database'] = sqlManager.database
     result["sql_db_connection_info"]['connection_status'] = False
+    result['ollama_models'] = ollama_models
     if sqlManager.connection:
         result["sql_db_connection_info"]['connection_status'] = True
     return result

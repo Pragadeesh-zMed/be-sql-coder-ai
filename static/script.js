@@ -6,6 +6,11 @@ display_InitialInfo = (response_data) => {
   $(`#prompt`).val(prompt);
   $(`#sql_metadata`).val(sql_metadata);
   $(`#ollama_instructions`).val(ollama_instructions);
+  let ollama_models = response_data.ollama_models || [];
+  ollama_models.forEach((emodel) => {
+    let option = $("<option/>", { text: emodel, value: emodel })[0];
+    $(`#ai_model`).append(option);
+  });
   let sql_db_connection_info = response_data.sql_db_connection_info || {};
   let host = sql_db_connection_info.host || "";
   let port = sql_db_connection_info.port || "";
