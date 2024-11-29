@@ -43,6 +43,74 @@
         <div
           class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 margin-top10px"
         >
+          <!-- Modal -->
+          <div
+            class="modal fade"
+            id="execQueryResponseInfoModal"
+            data-mdb-backdrop="static"
+            data-mdb-keyboard="false"
+            tabindex="-1"
+            aria-labelledby="execQueryResponseInfoModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="execQueryResponseInfoModalLabel">
+                    Info
+                  </h5>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-mdb-ripple-init
+                    data-mdb-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <h6 class="card-title margin-top10px">Query :</h6>
+                  <p id="exec_query_used"></p>
+                  <hr />
+                  <br />
+                  <h6 class="card-title margin-top10px">
+                    Time Taken for (in seconds)
+                  </h6>
+                  <hr />
+                  <table class="table table-bordered table-striped">
+                    <tbody>
+                      <tr>
+                        <td>Query Generation</td>
+                        <td id="tat_query_gen"></td>
+                      </tr>
+                      <tr>
+                        <td>Query Execution</td>
+                        <td id="tat_query_exec"></td>
+                      </tr>
+                      <tr>
+                        <td>OLLAMA Conversion</td>
+                        <td id="tat_ollama_conv"></td>
+                      </tr>
+                      <tr>
+                        <td>Total Response</td>
+                        <td id="tat_total_response"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-mdb-ripple-init
+                    data-mdb-dismiss="modal"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">SQLCoder</h5>
@@ -60,7 +128,7 @@
                       href="#info_text_div"
                       role="tab"
                       aria-controls="info_text_div"
-                      >Info</a
+                      >SQL DB Info</a
                     >
                     <a
                       class="list-group-item list-group-item-action px-3 border-0"
@@ -88,6 +156,24 @@
                       role="tab"
                       aria-controls="queryChat_text_div"
                       >Get SQL Query</a
+                    >
+                    <a
+                      class="list-group-item list-group-item-action px-3 border-0"
+                      id="ollama_instructions_text_div-list"
+                      data-mdb-list-init
+                      href="#ollama_instructions_text_div"
+                      role="tab"
+                      aria-controls="ollama_instructions_text_div"
+                      >OLLAMA Instructions</a
+                    >
+                    <a
+                      class="list-group-item list-group-item-action px-3 border-0"
+                      id="executionChat_text_div-list"
+                      data-mdb-list-init
+                      href="#executionChat_text_div"
+                      role="tab"
+                      aria-controls="executionChat_text_div"
+                      >SQL Query Execution + OLLAMA</a
                     >
                   </div>
                 </div>
@@ -300,6 +386,108 @@
                         <center>
                           <div
                             id="get_query_loader"
+                            class="spinner-border text-primary margin-top10px none"
+                            role="status"
+                          >
+                            <span class="visually-hidden">Loading...</span>
+                          </div>
+                        </center>
+                      </div>
+                    </div>
+                    <div
+                      class="tab-pane fade"
+                      id="ollama_instructions_text_div"
+                      role="tabpanel"
+                      aria-labelledby="ollama_instructions_text_div-list"
+                    >
+                      <div
+                        class="tab_content"
+                        id="ollama_instructions_text_div_content"
+                      >
+                        <div
+                          class="form-outline margin-top10px"
+                          data-mdb-input-init
+                        >
+                          <textarea
+                            class="form-control"
+                            id="ollama_instructions"
+                            rows="20"
+                          ></textarea>
+                          <label class="form-label" for="ollama_instructions"
+                            >OLLAMA Instructions</label
+                          >
+                        </div>
+                        <button
+                          type="button"
+                          id="save_ollama_instructions_btn"
+                          class="btn btn-primary btn-block margin-top10px"
+                          data-mdb-ripple-init
+                        >
+                          Save
+                        </button>
+                        <center>
+                          <div
+                            id="save_ollama_instructions_loader"
+                            class="spinner-border text-primary margin-top10px float-right none"
+                            role="status"
+                          >
+                            <span class="visually-hidden">Loading...</span>
+                          </div>
+                        </center>
+                      </div>
+                    </div>
+                    <div
+                      class="tab-pane fade"
+                      id="executionChat_text_div"
+                      role="tabpanel"
+                      aria-labelledby="executionChat_text_div-list"
+                    >
+                      <div
+                        class="tab_content"
+                        id="executionChat_text_div_content"
+                      >
+                        <div class="form-group">
+                          <label class="form-label" for="ai_model"
+                            >AI Model</label
+                          >
+                          <select class="form-control" id="ai_model">
+                            <option value="mistral-small">mistral-small</option>
+                            <option value="llama3.1:8b-instruct-q8_0">
+                              llama3.1:8b-instruct-q8_0
+                            </option>
+                            <option value="llama3.2:3b-instruct-q8_0">
+                              llama3.2:3b-instruct-q8_0
+                            </option>
+                          </select>
+                        </div>
+                        <div
+                          id="executor_chat_content_area"
+                          class="margin-top10px"
+                        ></div>
+                        <div
+                          class="form-outline margin-top10px"
+                          data-mdb-input-init
+                        >
+                          <textarea
+                            class="form-control"
+                            id="exec_question"
+                            rows="3"
+                          ></textarea>
+                          <label class="form-label" for="exec_question"
+                            >Question</label
+                          >
+                        </div>
+                        <button
+                          type="button"
+                          id="get_exec_response_btn"
+                          class="btn btn-primary btn-block margin-top10px"
+                          data-mdb-ripple-init
+                        >
+                          Execute
+                        </button>
+                        <center>
+                          <div
+                            id="get_exec_response_loader"
                             class="spinner-border text-primary margin-top10px none"
                             role="status"
                           >

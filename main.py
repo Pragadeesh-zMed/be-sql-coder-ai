@@ -10,7 +10,7 @@ from pydantic import BaseModel
 import markdown
 import time
 import uuid
-
+import gen_ai
 import SQLQueryManager
 
 sqlManager = SQLQueryManager.SQLQueryGenerator()
@@ -27,8 +27,15 @@ class PromptSaveParameters(BaseModel):
 class MetadataSaveParameters(BaseModel):
     sql_metadata: str
 
+class OllamaInstructionsSaveParameters(BaseModel):
+    instructions: str
+
 class QueryFetchParameters(BaseModel):
     question: str
+
+class QueryExecutorFetchParameters(BaseModel):
+    question: str
+    model: str
 
 class DBConnectionSaveParamaters(BaseModel):
     host: str
@@ -58,6 +65,9 @@ async def getAllAvailableInfo():
     metadata_file=open("metadata.sql","r")
     result['sql_metadata'] = metadata_file.read()
     metadata_file.close()
+    ollama_instruction_file=open("ollama_instruction.txt","r")
+    result['ollama_instructions'] = ollama_instruction_file.read()
+    ollama_instruction_file.close()
     result["sql_db_connection_info"]={}
     result["sql_db_connection_info"]['host'] = sqlManager.host
     result["sql_db_connection_info"]['port'] = sqlManager.port
@@ -87,6 +97,14 @@ async def save_metadata_data(body_data:MetadataSaveParameters):
     sqlManager.setup_metadata()
     return {"status":"OK"}
 
+@app.post("/save/ollama_instructions")
+async def save_ollama_instructions(body_data:OllamaInstructionsSaveParameters):
+    data = body_data.instructions
+    nfile=open("ollama_instruction.txt","w")
+    nfile.write(data)
+    nfile.close()
+    return {"status":"OK"}
+
 @app.post("/save/db/connection")
 async def save_db_connection(body_data:DBConnectionSaveParamaters):
     sqlManager.host = body_data.host
@@ -105,6 +123,40 @@ async def save_db_connection(body_data:DBConnectionSaveParamaters):
 async def get_query_for_the_question(body_data:QueryFetchParameters):
     query = sqlManager.getQuery(body_data.question)
     return {"query":query}
+
+@app.post("/execute/query")
+async def execute_query_for_the_question(body_data:QueryExecutorFetchParameters):
+    request_received= time.time()
+    question = body_data.question
+    result = {}
+    query_generate_start_time = time.time()
+    query = sqlManager.getQuery(question)
+    query_generate_end_time = time.time()
+    result["query"]=query
+    result["time_taken_in_ms"]={}
+    result["time_taken_in_ms"]['generate_query']=int((query_generate_end_time-query_generate_start_time)*1000)
+    query_execution_start_time = time.time()
+    QueryResponse = sqlManager.execute_query(query)
+    result["query_response"] = QueryResponse
+    query_execution_end_time = time.time()
+    result["time_taken_in_ms"]['query_execution']=int((query_execution_end_time-query_execution_start_time)*1000)
+    ai_process_start_time = time.time()
+    ai_server = gen_ai.zOllama('English',body_data.model)
+    user_content = f"Question :{question} \n Answer : {QueryResponse}"
+    ollama_instruction_file=open("ollama_instruction.txt","r")
+    system_content = ollama_instruction_file.read()
+    ollama_instruction_file.close()
+    chat_data = ai_server.sendMessage([{'role': 'system','content':system_content },{'role': 'user','content':user_content }])
+    ai_process_end_time = time.time()
+    message_data = chat_data['message'].get('content',None)
+    ai_response = ""
+    if message_data is not None:
+        ai_response = markdown.markdown(message_data)
+    result["time_taken_in_ms"]['gen_ai_response']=int((ai_process_end_time-ai_process_start_time)*1000)
+    result["response"] = ai_response
+    response_constructed = time.time()
+    result["time_taken_in_ms"]['total_response']=int((response_constructed-request_received)*1000)
+    return result
 
 
 

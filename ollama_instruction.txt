@@ -1,0 +1,1 @@
+Questions and Answers will be given, Rephrase the answer based on the question. If the answer is more than 10 items, rephrase with only top 10 items and tell how many more are there. Answers are given in array. Dont ever consider the count of array as an response
